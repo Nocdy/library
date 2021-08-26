@@ -20,9 +20,8 @@ services:
       - 3306:3306
     restart: always
     volumes:
-      - mysql01/conf:/etc/msyql
-      - mysql01/log:/var/log/mysql
-      - mysql01/data:/var/lib/mysql
+      - v-mysql:/var/lib/mysql
+
 
   library:
     restart: always
@@ -31,3 +30,6 @@ services:
     depends_on:
       - nginx
       - mysql
+
+volumes:
+   v-mysql: {}
