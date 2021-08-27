@@ -2,18 +2,21 @@ package com.nocdy.web.controller;
 
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.nocdy.web.entity.User;
 import com.nocdy.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import javax.servlet.http.HttpSession;
 
-
+/**
+ * @author Nocdy
+ */
 @Controller
 public class UserController {
 
@@ -27,18 +30,22 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public @ResponseBody Object login(@RequestParam("name") String name,
-                                      @RequestParam("password") String password){
+    public String login(@RequestParam("name") String name,
+                        @RequestParam("password") String password,
+                        HttpSession session){
 
         QueryWrapper<User> queryWrapper=new QueryWrapper<>();
         queryWrapper
                 .eq("user_name",name)
                 .eq("user_password",password);
         User user=userService.getOne(queryWrapper);
-        if(user==null)
-            return "check your info";
-        else
-            return "login success";
+        if(user==null){
+            return "redirect:error/404";
+        }
+        else{
+            session.setAttribute("User",user);
+            return "redirect:/book";
+        }
     }
 
     @GetMapping(value = "/registry")
@@ -56,12 +63,20 @@ public class UserController {
         user.setPassword(password);
         user.setConfirmPassword(confirmPassword);
         if(user.getPassword().equals(user.getConfirmPassword())){
-            userService.save(user);
-            return "success";
+            try {
+                userService.save(user);
+                return "success";
+            }
+            catch (Exception e){
+                return e.toString();
+            }
         }
         else{
             return "failed";
         }
     }
+
+
+
 
 }

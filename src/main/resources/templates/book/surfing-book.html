@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <title>Library</title>
+</head>
+<body th:inline="text" >
+<div style="text-align: right" width="100%">
+    <p>User: [[${session.get("User").getName()}]]</p>
+    <button type="button"  class="btn">注销</button>
+</div>
+<div style="display:flex;justify-content:center;">
+    <form method="get" onsubmit="summitText()" target="the_iframe">
+        <input placeholder="输入关键词" type="text" name="name" />
+        <button type="submit" class="btn-search"><span>搜索</span></button>
+    </form>
+    <iframe id="is_iframe" name="the_iframe" style="display:none;"></iframe>
+</div>
+
+<div>
+<table border="1" width="100%" id="bookTable">
+    <thead >
+    <th>书名</th>
+    <th>类型
+        <select onchange="changeType()">
+            <option selected>全部</option>
+            <option>计算机</option>
+            <option>游戏</option>
+            <option>电影</option>
+            <option>科普</option>
+            <option>小说</option>
+            <option>经济</option>
+        </select>
+    </th>
+    </th>
+    <th>简介</th>
+    <th>存量</th>
+    <th>借阅</th>
+    </thead>
+    <tbody>
+    <tr th:each="list:${BookList}">
+        <td th:text="*{list.getName()}"></td>
+        <td th:text="*{list.getType()}"></td>
+        <td th:text="*{list.getInformation()}">
+        <td th:text="*{list.getCount()}"></td>
+        <td style="text-align: center"><a  onclick="test()">借阅</a>  <a onclick="test()">查看详情</a></td>
+    </tr>
+    </tbody>
+
+</table>
+
+</div>
+
+
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script th:inline="javascript">
+
+
+function changeType() {
+    var vs = $('select  option:selected').val();
+    var text=$("input[name='name']").val();
+    var tab= document.getElementById("bookTable");
+    var rows=tab.getElementsByTagName("tr");
+    var rowsNum=rows.length;
+    for(var i=1;i<rowsNum;i++){
+        tab.deleteRow(1);
+    }
+    $.ajax({
+        url:"http://localhost:8080/book/search",
+        method:"GET",
+        data:{
+            name:text,
+            type:vs
+        },
+        dataType:"json",
+        success:function (response){
+            for(var data in response){
+               var row=tab.insertRow(1);
+               var list=response[data];
+               var name=list.name;
+               var type=list.type;
+               var info=list.information;
+               var count=list.count;
+               var col1=row.insertCell();
+               var col2=row.insertCell();
+               var col3=row.insertCell();
+               var col4=row.insertCell();
+               var col5=row.insertCell();
+               col1.innerHTML='<td>'+name+'</td>';
+               col2.innerHTML='<td>'+type+'</td>';
+               col3.innerHTML='<td>'+info+'</td>';
+               col4.innerHTML='<td>'+count+'</td>';
+               col5.innerHTML='<td>'+'<a onclick="test()">借阅</a> '
+                                +'  <a onclick="test()">查看详情'+'</td>';
+            }
+        }
+    })
+}
+
+function summitText(){
+    var text=$("input[name='name']").val();
+    var vs = $('select  option:selected').val();
+    var tab= document.getElementById("bookTable");
+    var rows=tab.getElementsByTagName("tr");
+    var rowsNum=rows.length;
+    for(var i=1;i<rowsNum;i++){
+        tab.deleteRow(1);
+    }
+    $.ajax({
+        url:"http://localhost:8080/book/search",
+        method: "GET",
+        data: {
+            name:text,
+            type:vs
+        },
+        dataType: "json",
+        success:function (response){
+            for(var data in response){
+                var row=tab.insertRow(1);
+                var list=response[data];
+                var name=list.name;
+                var type=list.type;
+                var info=list.information;
+                var count=list.count;
+                var col1=row.insertCell();
+                var col2=row.insertCell();
+                var col3=row.insertCell();
+                var col4=row.insertCell();
+                var col5=row.insertCell();
+                col1.innerHTML='<td>'+name+'</td>';
+                col2.innerHTML='<td>'+type+'</td>';
+                col3.innerHTML='<td>'+info+'</td>';
+                col4.innerHTML='<td>'+count+'</td>';
+                col5.innerHTML='<td>'+'<a onclick="test()">借阅</a> '
+                    +'  <a onclick="test()">查看详情'+'</td>';
+            }
+        }
+    })
+}
+
+
+</script>
+
+</body>
+</html>
