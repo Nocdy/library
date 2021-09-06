@@ -1,18 +1,20 @@
 package com.nocdy.web.controller;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.nocdy.web.entity.Record;
 import com.nocdy.web.entity.User;
+import com.nocdy.web.service.RecordService;
 import com.nocdy.web.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Nocdy
@@ -20,8 +22,10 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class UserController {
 
-    @Autowired
+    @Resource
     UserService userService;
+    @Resource
+    RecordService recordService;
 
 
     @GetMapping(value = "/")
@@ -74,6 +78,17 @@ public class UserController {
         else{
             return "failed";
         }
+    }
+
+    @GetMapping(value = "/info")
+    public @ResponseBody Object checkBorrowBook(HttpSession session){
+        User user=(User) session.getAttribute("User");
+        QueryWrapper<Record> queryWrapper=new QueryWrapper<>();
+        queryWrapper
+                .eq("user",user.getId())
+                .eq("status",true);
+        List<Record> recordList=recordService.list(queryWrapper);
+        return recordList;
     }
 
 

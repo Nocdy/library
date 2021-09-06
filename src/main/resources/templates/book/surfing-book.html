@@ -68,7 +68,7 @@ function changeType() {
         tab.deleteRow(1);
     }
     $.ajax({
-        url:"http://localhost:8080/book/search",
+        url:"/book/search",
         method:"GET",
         data:{
             name:text,
