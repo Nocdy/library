@@ -6,6 +6,7 @@ import com.nocdy.web.entity.Record;
 import com.nocdy.web.entity.User;
 import com.nocdy.web.service.RecordService;
 import com.nocdy.web.service.UserService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * @author Nocdy
@@ -26,6 +26,8 @@ public class UserController {
     UserService userService;
     @Resource
     RecordService recordService;
+    @Resource
+    RedisTemplate<Object,Object> redisTemplate;
 
 
     @GetMapping(value = "/")
@@ -87,8 +89,8 @@ public class UserController {
         queryWrapper
                 .eq("user",user.getId())
                 .eq("status",true);
-        List<Record> recordList=recordService.list(queryWrapper);
-        return recordList;
+       return recordService.list(queryWrapper);
+
     }
 
 

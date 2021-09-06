@@ -14,3 +14,15 @@ spring:
   thymeleaf:
     cache: false
 
+  redis:
+    host: 119.29.14.37
+    port: 6379
+    password: 12345
+    database: 0
+
+  session:
+    store-type: redis
+    timeout: 1800
+
+
+

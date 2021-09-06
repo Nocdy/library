@@ -9,10 +9,12 @@ import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
+
 @Repository
 @Data
 @TableName("user")
-public class User {
+public class User implements Serializable {
 
     @TableId(value = "user_id",type = IdType.AUTO)
     Integer id;

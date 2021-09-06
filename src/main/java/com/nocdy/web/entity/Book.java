@@ -9,6 +9,8 @@ import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
+
 
 /**
  * @author Nocdy
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Data
 @TableName(value = "book")
-public class Book {
+public class Book implements Serializable {
 
     @TableId(value = "book_id",type = IdType.AUTO)
     Integer id;

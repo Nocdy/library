@@ -8,6 +8,7 @@ import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -18,7 +19,7 @@ import java.util.Date;
 @Repository
 @Data
 @TableName(value = "record")
-public class Record {
+public class Record implements Serializable {
 
     @TableId(value = "record_id",type = IdType.AUTO)
     Integer recordId;
